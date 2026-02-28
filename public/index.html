@@ -3,43 +3,698 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WalkingFish</title>
+  <title>WalkingFish — Walk. Earn. Play.</title>
+  <meta name="description" content="Poker chips earned by walking. WalkingFish replaces gambling with physical activity — play real-time Texas Hold'em with friends using steps as your buy-in.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #060b08;
+      --bg-surface: #0c1410;
+      --bg-elevated: #121c17;
+      --border: #1c3028;
+      --border-light: rgba(52, 199, 89, 0.08);
+      --text: #e4efe8;
+      --text-muted: #6a8b7a;
+      --text-dim: #3d5a4a;
+      --green: #34c759;
+      --green-glow: rgba(52, 199, 89, 0.12);
+      --gold: #d4a84b;
+      --gold-dim: rgba(212, 168, 75, 0.15);
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'Outfit', -apple-system, sans-serif;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
-      background: #0a100d;
-      color: #e4efe8;
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Grain overlay ─────────────────────────────────── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ── Section reveal animations ─────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── Navigation ────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
+      backdrop-filter: blur(0px);
+      transition: backdrop-filter 0.3s;
+    }
+    nav.scrolled {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(6, 11, 8, 0.8);
+    }
+    .nav-logo {
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-logo-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(52, 199, 89, 0.5);
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── Hero ───────────────────────────────────────────── */
+    .hero {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(52, 199, 89, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 32px;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(48px, 8vw, 96px);
+      line-height: 1.05;
+      letter-spacing: -1px;
+      max-width: 800px;
+      margin-bottom: 32px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--green);
+    }
+    .hero-sub {
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--text-muted);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 48px;
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .hero-scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--border), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.2); }
+    }
+
+    /* ── Divider ────────────────────────────────────────── */
+    .divider {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+    }
+
+    /* ── The Problem ────────────────────────────────────── */
+    .problem {
+      padding: 140px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 40px;
+    }
+    .problem h2 {
+      font-family: var(--serif);
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 48px;
+    }
+    .problem h2 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .problem-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+    .problem-body p {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--text-muted);
+    }
+    .problem-body strong {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* ── The Tension (cards) ────────────────────────────── */
+    .tension {
+      padding: 100px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .tension-grid {
+      display: grid;
+      grid-template-columns: 1fr 48px 1fr;
+      align-items: stretch;
+      gap: 0;
+    }
+    .tension-card {
+      padding: 56px 48px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .tension-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .tension-card.dark {
+      background: var(--bg-surface);
+    }
+    .tension-card.dark::before {
+      background: radial-gradient(ellipse at top left, rgba(196, 77, 77, 0.06), transparent 60%);
+    }
+    .tension-card.light {
+      background: var(--bg-elevated);
+      border-color: rgba(52, 199, 89, 0.15);
+    }
+    .tension-card.light::before {
+      background: radial-gradient(ellipse at bottom right, rgba(52, 199, 89, 0.06), transparent 60%);
+    }
+    .tension-card-icon {
+      font-size: 32px;
+      margin-bottom: 28px;
+      display: block;
+    }
+    .tension-card h3 {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+    .tension-card.dark h3 { color: #c44d4d; }
+    .tension-card.light h3 { color: var(--green); }
+    .tension-card p {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--text-muted);
+    }
+    .tension-vs {
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 48px 24px;
     }
-    .logo { font-size: 48px; margin-bottom: 12px; }
-    h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
-    .tagline { color: #4a6b5a; font-size: 16px; margin-bottom: 48px; }
-    .links { display: flex; gap: 24px; }
-    .links a {
-      color: #34c759;
-      text-decoration: none;
+    .tension-vs span {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 18px;
+      color: var(--text-dim);
+    }
+
+    /* ── How it works ──────────────────────────────────── */
+    .how {
+      padding: 140px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .how h2 {
+      font-family: var(--serif);
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 80px;
+      max-width: 600px;
+    }
+    .how h2 em {
+      font-style: italic;
+      color: var(--green);
+    }
+    .steps-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    .step-card {
+      padding: 48px 36px;
+      border-radius: 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      position: relative;
+    }
+    .step-number {
+      font-family: var(--serif);
+      font-size: 64px;
+      font-style: italic;
+      color: var(--border);
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+    .step-card h3 {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 400;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+    .step-card p {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--text-muted);
+    }
+    .step-card .step-highlight {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
       font-weight: 600;
-      font-size: 15px;
-      padding: 10px 20px;
-      border: 1px solid #1c3028;
-      border-radius: 10px;
-      transition: background 0.2s;
+      letter-spacing: 0.5px;
     }
-    .links a:hover { background: rgba(52, 199, 89, 0.08); }
+    .step-card:nth-child(1) .step-highlight {
+      background: var(--green-glow);
+      color: var(--green);
+    }
+    .step-card:nth-child(2) .step-highlight {
+      background: var(--gold-dim);
+      color: var(--gold);
+    }
+    .step-card:nth-child(3) .step-highlight {
+      background: rgba(91, 155, 213, 0.12);
+      color: #5b9bd5;
+    }
+
+    /* ── Philosophy ────────────────────────────────────── */
+    .philosophy {
+      padding: 140px 24px;
+      text-align: center;
+      position: relative;
+    }
+    .philosophy::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(212, 168, 75, 0.03) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .philosophy blockquote {
+      font-family: var(--serif);
+      font-size: clamp(28px, 4.5vw, 44px);
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.3;
+      max-width: 800px;
+      margin: 0 auto 40px;
+      color: var(--text);
+    }
+    .philosophy .attribution {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+    }
+    .philosophy .attribution strong {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ── Values ─────────────────────────────────────────── */
+    .values {
+      padding: 80px 24px 140px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .value-item {
+      padding: 36px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+    }
+    .value-item h4 {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    .value-item p {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--text-muted);
+    }
+
+    /* ── Footer ─────────────────────────────────────────── */
+    footer {
+      padding: 48px 40px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-left {
+      font-size: 13px;
+      color: var(--text-dim);
+      font-weight: 400;
+    }
+    .footer-links {
+      display: flex;
+      gap: 28px;
+    }
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      .nav-links { gap: 20px; }
+      .nav-links a { font-size: 12px; }
+      .hero { padding: 100px 20px 60px; min-height: 90vh; }
+      .hero-sub { font-size: 16px; }
+      .problem { padding: 80px 20px; }
+      .problem-body { grid-template-columns: 1fr; gap: 24px; }
+      .tension { padding: 60px 20px; }
+      .tension-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .tension-vs { display: none; }
+      .tension-card { padding: 36px 28px; }
+      .how { padding: 80px 20px; }
+      .steps-row { grid-template-columns: 1fr; gap: 16px; }
+      .step-card { padding: 36px 28px; }
+      .philosophy { padding: 80px 20px; }
+      .values { padding: 40px 20px 80px; }
+      .values-grid { grid-template-columns: 1fr; }
+      footer {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+        padding: 36px 20px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="logo">🐟</div>
-  <h1>WalkingFish</h1>
-  <p class="tagline">Walk. Earn. Play.</p>
-  <div class="links">
-    <a href="/privacy">Privacy Policy</a>
-  </div>
+
+  <!-- Navigation -->
+  <nav id="nav">
+    <a href="/" class="nav-logo">
+      <span class="nav-logo-dot"></span>
+      WalkingFish
+    </a>
+    <div class="nav-links">
+      <a href="#how">How It Works</a>
+      <a href="#mission">Mission</a>
+      <a href="/privacy">Privacy</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <p class="hero-eyebrow reveal">Fitness-Gamified Poker</p>
+    <h1 class="reveal reveal-delay-1">Your buy-in<br>is your <em>morning walk</em></h1>
+    <p class="hero-sub reveal reveal-delay-2">
+      WalkingFish turns daily steps into poker chips. No real money.
+      No gambling. Just strategic play fueled by physical activity.
+    </p>
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- The Problem -->
+  <section class="problem">
+    <p class="section-label reveal">The Problem</p>
+    <h2 class="reveal reveal-delay-1">
+      Poker is one of the great strategy games.<br>
+      It deserves a better <em>currency</em>.
+    </h2>
+    <div class="problem-body">
+      <p class="reveal reveal-delay-2">
+        <strong>Poker teaches decision-making under uncertainty</strong> — reading situations,
+        managing risk, adapting to opponents. It builds skills that matter far beyond
+        the table: patience, discipline, probabilistic thinking.
+      </p>
+      <p class="reveal reveal-delay-3">
+        But for decades, poker has been inseparable from gambling. The money on the table
+        changes the nature of the game — it stops being about strategy and starts being about
+        stakes. <strong>We wanted to keep the brilliance of poker and remove what corrupts it.</strong>
+      </p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- The Tension -->
+  <section class="tension">
+    <div class="tension-grid">
+      <div class="tension-card dark reveal">
+        <span class="tension-card-icon">&#9830;</span>
+        <h3>Traditional Poker</h3>
+        <p>
+          Real money creates real anxiety. The strategic beauty of the game gets buried
+          under the pressure of financial loss. Players chase losses, play scared, or
+          develop unhealthy habits. The game selects for bankroll, not skill.
+        </p>
+      </div>
+      <div class="tension-vs">
+        <span>vs</span>
+      </div>
+      <div class="tension-card light reveal reveal-delay-2">
+        <span class="tension-card-icon">&#9827;</span>
+        <h3>WalkingFish</h3>
+        <p>
+          Steps are a currency you earn by living well. You can't buy your way in,
+          you can't lose your rent. Every chip on the table represents physical effort —
+          which makes the game meaningful without making it harmful.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- How it works -->
+  <section class="how" id="how">
+    <p class="section-label reveal">How It Works</p>
+    <h2 class="reveal reveal-delay-1">Three steps to <em>the table</em></h2>
+    <div class="steps-row">
+      <div class="step-card reveal reveal-delay-1">
+        <div class="step-number">01</div>
+        <h3>Walk</h3>
+        <p>
+          Your phone tracks your daily steps. Up to 10,000 steps per day count
+          toward your chip balance. Just walk like you normally do.
+        </p>
+        <span class="step-highlight">10,000 steps = 10,000 chips</span>
+      </div>
+      <div class="step-card reveal reveal-delay-2">
+        <div class="step-number">02</div>
+        <h3>Earn</h3>
+        <p>
+          Claim your steps and convert them into poker chips. Chips accumulate
+          over time — bank them for bigger games or play daily.
+        </p>
+        <span class="step-highlight">Claim daily, play anytime</span>
+      </div>
+      <div class="step-card reveal reveal-delay-3">
+        <div class="step-number">03</div>
+        <h3>Play</h3>
+        <p>
+          Create a table or join a friend's game. Real-time multiplayer
+          Texas Hold'em with up to 8 players. All the strategy, none of the gambling.
+        </p>
+        <span class="step-highlight">Real-time multiplayer</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Philosophy -->
+  <section class="philosophy" id="mission">
+    <blockquote class="reveal">
+      "The best games reward thinking, not spending. We built a poker app where the only thing you invest is your own effort."
+    </blockquote>
+    <p class="attribution reveal reveal-delay-1"><strong>The WalkingFish Team</strong></p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Values -->
+  <section class="values">
+    <div class="values-grid">
+      <div class="value-item reveal">
+        <h4>No real money</h4>
+        <p>You cannot purchase chips. There is no way to spend money inside the app. Every chip is earned through physical activity.</p>
+      </div>
+      <div class="value-item reveal reveal-delay-1">
+        <h4>Strategy over stakes</h4>
+        <p>When losing doesn't cost rent, you play better poker. You bluff bolder, read deeper, and focus on the craft of the game.</p>
+      </div>
+      <div class="value-item reveal reveal-delay-2">
+        <h4>Movement as currency</h4>
+        <p>Steps are universal and equitable. Everyone can walk. Your buy-in reflects your daily activity, not your bank account.</p>
+      </div>
+      <div class="value-item reveal reveal-delay-3">
+        <h4>Play with friends</h4>
+        <p>Low-friction private games. Share a code, join a table. Designed for friend groups who want a reason to both move and compete.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <span class="footer-left">&copy; 2026 WalkingFish</span>
+    <div class="footer-links">
+      <a href="/privacy">Privacy Policy</a>
+      <a href="mailto:walkingfishapp@gmail.com">Contact</a>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Intersection Observer for reveals
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>

@@ -4,79 +4,208 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Policy — WalkingFish</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #060b08;
+      --bg-surface: #0c1410;
+      --border: #1c3028;
+      --text: #e4efe8;
+      --text-muted: #6a8b7a;
+      --text-dim: #3d5a4a;
+      --green: #34c759;
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'Outfit', -apple-system, sans-serif;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
-      background: #0a100d;
-      color: #e4efe8;
-      line-height: 1.7;
-      padding: 48px 24px;
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .container {
       max-width: 680px;
       margin: 0 auto;
+      padding: 120px 24px 80px;
     }
-    a { color: #34c759; }
-    h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
-    .updated { color: #4a6b5a; font-size: 13px; margin-bottom: 36px; }
-    h2 { font-size: 18px; font-weight: 700; margin-top: 32px; margin-bottom: 10px; color: #e4efe8; }
-    p, li { font-size: 15px; color: #a0b8aa; margin-bottom: 12px; }
-    ul { padding-left: 20px; margin-bottom: 12px; }
-    li { margin-bottom: 6px; }
-    .back { display: inline-block; margin-bottom: 32px; color: #34c759; text-decoration: none; font-weight: 600; font-size: 14px; }
-    .back:hover { text-decoration: underline; }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      margin-bottom: 48px;
+      transition: color 0.2s;
+    }
+    .back:hover { color: var(--green); }
+    .back svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: 40px;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+
+    .updated {
+      color: var(--text-dim);
+      font-size: 13px;
+      font-weight: 400;
+      margin-bottom: 48px;
+    }
+
+    .intro {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h2 {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+      margin-top: 48px;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    p {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    strong {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    ul {
+      padding-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    a { color: var(--green); transition: opacity 0.2s; }
+    a:hover { opacity: 0.8; }
+
+    footer {
+      margin-top: 80px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 80px 20px 60px; }
+      h1 { font-size: 32px; }
+    }
   </style>
 </head>
 <body>
-  <a href="/" class="back">&larr; Back</a>
-  <h1>Privacy Policy</h1>
-  <p class="updated">Last updated: February 28, 2026</p>
+  <div class="container">
+    <a href="/" class="back">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </a>
 
-  <p>WalkingFish ("we", "our", "the app") is a fitness-gamified poker application. This policy explains what data we collect, why, and how we handle it.</p>
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: February 28, 2026</p>
 
-  <h2>1. Data We Collect</h2>
-  <ul>
-    <li><strong>Phone number</strong> — used for account authentication via SMS verification.</li>
-    <li><strong>Display name</strong> — the name you choose when signing up, shown to other players.</li>
-    <li><strong>Profile picture</strong> — optionally uploaded by you, stored securely.</li>
-    <li><strong>Step count</strong> — daily step data from your device's motion sensors, used to convert steps into in-game chips. We read the pedometer count; we do not access raw motion or location data.</li>
-    <li><strong>Game activity</strong> — poker game stats (games played, games won, chip balance) to power your profile and leaderboards.</li>
-  </ul>
+    <p class="intro">
+      WalkingFish is a fitness-gamified poker application. This policy explains what data
+      we collect, why we collect it, and how we handle it. We believe in transparency and
+      minimal data collection.
+    </p>
 
-  <h2>2. How We Use Your Data</h2>
-  <ul>
-    <li>Authenticate your account and let you sign in.</li>
-    <li>Convert your daily steps into poker chips (the core feature of the app).</li>
-    <li>Display your name, picture, and stats to other players in games and on leaderboards.</li>
-    <li>Maintain game state during live poker sessions.</li>
-  </ul>
-  <p>We do <strong>not</strong> use your data for advertising, marketing, or data mining.</p>
+    <h2>1. Data We Collect</h2>
+    <ul>
+      <li><strong>Phone number</strong> — used for account authentication via SMS verification.</li>
+      <li><strong>Display name</strong> — the name you choose when signing up, shown to other players.</li>
+      <li><strong>Profile picture</strong> — optionally uploaded by you, stored securely.</li>
+      <li><strong>Step count</strong> — daily step data from your device's motion sensors, used to convert steps into in-game chips. We read the pedometer count; we do not access raw motion or location data.</li>
+      <li><strong>Game activity</strong> — poker game stats (games played, games won, chip balance) to power your profile and leaderboards.</li>
+    </ul>
 
-  <h2>3. Third-Party Services</h2>
-  <p>We use the following third-party services to operate the app:</p>
-  <ul>
-    <li><strong>Firebase Authentication</strong> (Google) — phone number verification and account management.</li>
-    <li><strong>Cloud Firestore</strong> (Google) — real-time database for game state and user profiles.</li>
-    <li><strong>Firebase Storage</strong> (Google) — profile picture hosting.</li>
-  </ul>
-  <p>Google's privacy policy applies to these services: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a></p>
-  <p>We do not share your data with any other third parties.</p>
+    <h2>2. How We Use Your Data</h2>
+    <ul>
+      <li>Authenticate your account and let you sign in.</li>
+      <li>Convert your daily steps into poker chips (the core feature of the app).</li>
+      <li>Display your name, picture, and stats to other players in games and on leaderboards.</li>
+      <li>Maintain game state during live poker sessions.</li>
+    </ul>
+    <p>We do <strong>not</strong> use your data for advertising, marketing, or data mining.</p>
 
-  <h2>4. Data Retention</h2>
-  <p>Your data is retained as long as your account exists. Step records older than 3 days are automatically pruned. If you delete your account (available in the app under Profile), all your data is permanently removed.</p>
+    <h2>3. Third-Party Services</h2>
+    <p>We use the following third-party services to operate the app:</p>
+    <ul>
+      <li><strong>Firebase Authentication</strong> (Google) — phone number verification and account management.</li>
+      <li><strong>Cloud Firestore</strong> (Google) — real-time database for game state and user profiles.</li>
+      <li><strong>Firebase Storage</strong> (Google) — profile picture hosting.</li>
+    </ul>
+    <p>Google's privacy policy applies to these services: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a></p>
+    <p>We do not share your data with any other third parties.</p>
 
-  <h2>5. Account Deletion</h2>
-  <p>You can delete your account at any time from the Profile screen in the app. This permanently deletes your user profile, game stats, and authentication credentials. This action cannot be undone.</p>
+    <h2>4. Data Retention</h2>
+    <p>Your data is retained as long as your account exists. Step records older than 3 days are automatically pruned. If you delete your account (available in the app under Profile), all your data is permanently removed.</p>
 
-  <h2>6. Children's Privacy</h2>
-  <p>WalkingFish is not directed at children under 17. We do not knowingly collect data from children. If you believe a child has provided us with data, please contact us.</p>
+    <h2>5. Account Deletion</h2>
+    <p>You can delete your account at any time from the Profile screen in the app. This permanently deletes your user profile, game stats, and authentication credentials. This action cannot be undone.</p>
 
-  <h2>7. Security</h2>
-  <p>All data is transmitted over HTTPS and stored in Google Cloud infrastructure with encryption at rest. Authentication uses industry-standard phone verification with one-time SMS codes.</p>
+    <h2>6. Children's Privacy</h2>
+    <p>WalkingFish is not directed at children under 17. We do not knowingly collect data from children. If you believe a child has provided us with data, please contact us.</p>
 
-  <h2>8. Changes to This Policy</h2>
-  <p>We may update this policy from time to time. Changes will be posted on this page with an updated date.</p>
+    <h2>7. Security</h2>
+    <p>All data is transmitted over HTTPS and stored in Google Cloud infrastructure with encryption at rest. Authentication uses industry-standard phone verification with one-time SMS codes.</p>
 
-  <h2>9. Contact</h2>
-  <p>Questions about this policy? Reach us at <a href="mailto:walkingfishapp@gmail.com">walkingfishapp@gmail.com</a></p>
+    <h2>8. Changes to This Policy</h2>
+    <p>We may update this policy from time to time. Changes will be posted on this page with an updated date.</p>
+
+    <h2>9. Contact</h2>
+    <p>Questions about this policy? Reach us at <a href="mailto:walkingfishapp@gmail.com">walkingfishapp@gmail.com</a></p>
+
+    <footer>&copy; 2026 WalkingFish</footer>
+  </div>
 </body>
 </html>
