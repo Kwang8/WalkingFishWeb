@@ -241,18 +241,20 @@
       background: radial-gradient(ellipse, rgba(52, 199, 89, 0.04) 0%, transparent 70%);
       pointer-events: none;
     }
-    .hero-phone-wrap {
+    .hero-gerald-wrap {
       position: relative;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
       transition: transform 0.1s ease-out;
     }
-    .hero-phone-wrap .phone-mockup {
-      width: 200px;
-      animation: heroFloat 4s ease-in-out infinite;
+    .hero-gerald {
+      width: clamp(120px, 18vw, 180px);
+      height: auto;
+      filter: drop-shadow(0 0 40px rgba(52, 199, 89, 0.15));
+      animation: geraldBounce 3s ease-in-out infinite;
     }
-    @keyframes heroFloat {
+    @keyframes geraldBounce {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
+      50% { transform: translateY(-10px); }
     }
     .hero-eyebrow {
       font-family: var(--sans);
@@ -846,8 +848,8 @@
       .hero h1 {
         font-size: clamp(36px, 10vw, 48px);
       }
-      .hero-phone-wrap .phone-mockup {
-        width: 160px;
+      .hero-gerald {
+        width: 100px;
       }
       .hero-eyebrow {
         font-size: 10px;
@@ -892,7 +894,7 @@
         transform: none;
         transition: none;
       }
-      .hero-phone-wrap .phone-mockup { animation: none; }
+      .hero-gerald { animation: none; }
       .hero-scroll-line { animation: none; }
       .floating-suit { animation: none; display: none; }
       .ticker-track { animation: none; }
@@ -934,13 +936,8 @@
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-phone-wrap reveal" id="heroPhone">
-      <div class="phone-mockup">
-        <div class="phone-frame">
-          <div class="phone-notch"></div>
-          <img src="/images/screen-chips.png" alt="WalkingFish app — earn chips from steps" loading="eager">
-        </div>
-      </div>
+    <div class="hero-gerald-wrap reveal" id="heroPhone">
+      <img src="/images/GeraldTransparent.png" alt="Gerald the WalkingFish" class="hero-gerald">
     </div>
     <p class="hero-eyebrow reveal reveal-delay-1">Fitness-Gamified Poker</p>
     <h1 class="reveal reveal-delay-2">Your buy-in<br>is your <em>morning walk</em></h1>
