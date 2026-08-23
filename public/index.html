@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>WalkingFish — Walk. Earn. Play.</title>
   <meta name="description" content="Poker chips earned by walking. WalkingFish replaces gambling with physical activity — play real-time Texas Hold'em with friends using steps as your buy-in.">
+  <!-- Smart App Banner: offers the app to visitors on iOS Safari -->
+  <meta name="apple-itunes-app" content="app-id=6759945201">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -348,6 +350,110 @@
     }
     .chip-cta-icon {
       font-size: 18px;
+    }
+
+    /* ── App Store badge ─────────────────────────────────
+       Official Apple artwork (marketingtools.apple.com).
+       Per Apple's identity guidelines it must not be recolored,
+       cropped, distorted or redrawn; minimum height 40px, with
+       clear space of at least 10% of the badge height around it. */
+    .app-store-badge {
+      display: inline-block;
+      padding: 8px;
+      line-height: 0;
+      border-radius: 14px;
+      transition: transform 0.2s, opacity 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .app-store-badge img {
+      display: block;
+      height: 54px;
+      width: auto;
+    }
+    .app-store-badge:hover {
+      transform: translateY(-2px);
+      opacity: 0.85;
+    }
+    .app-store-badge:active { transform: translateY(0); }
+    .app-store-badge:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 2px;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .hero-cta-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .hero-cta-secondary:hover { color: var(--text); }
+    .hero-cta-secondary span { font-size: 12px; }
+
+    .nav-download {
+      color: var(--green) !important;
+      font-weight: 600 !important;
+    }
+    .nav-download:hover { color: #5fe07f !important; }
+
+    /* ── Download section ──────────────────────────────── */
+    .download {
+      padding: 120px 24px;
+      text-align: center;
+      position: relative;
+      border-top: 1px solid var(--border);
+    }
+    .download::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 400px;
+      max-width: 100%;
+      background: radial-gradient(ellipse, var(--green-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .download-inner { position: relative; }
+    .download h2 {
+      font-family: var(--serif);
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+    .download h2 em {
+      font-style: italic;
+      color: var(--green);
+    }
+    .download .section-label {
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .download-sub {
+      font-size: 17px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto 36px;
+    }
+    .download-note {
+      margin: 24px auto 0;
+      font-size: 13px;
+      color: var(--text-dim);
+      letter-spacing: 0.3px;
     }
 
     .hero-scroll {
@@ -786,6 +892,10 @@
         font-size: 14px;
       }
 
+      .app-store-badge img { height: 48px; }
+      .download { padding: 72px 20px; }
+      .download-sub { font-size: 16px; }
+
       .problem { padding: 60px 20px; }
       .problem-body { grid-template-columns: 1fr; gap: 24px; }
 
@@ -875,6 +985,7 @@
       .philosophy blockquote {
         font-size: clamp(22px, 6vw, 28px);
       }
+      .app-store-badge img { height: 44px; }
     }
 
     /* ── Touch target sizing for mobile ──────────────── */
@@ -917,6 +1028,7 @@
       <a href="#how">How It Works</a>
       <a href="#mission">Our Mission</a>
       <a href="/privacy">Privacy</a>
+      <a href="https://apps.apple.com/us/app/walking-fish/id6759945201" class="nav-download" target="_blank" rel="noopener">Download</a>
     </div>
     <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
       <span></span>
@@ -932,6 +1044,8 @@
     <a href="#mission" class="mobile-menu-link">Our Mission</a>
     <span class="mobile-menu-suit" aria-hidden="true">&spades; &hearts; &diams; &clubs;</span>
     <a href="/privacy" class="mobile-menu-link">Privacy</a>
+    <span class="mobile-menu-suit" aria-hidden="true">&spades; &hearts; &diams; &clubs;</span>
+    <a href="https://apps.apple.com/us/app/walking-fish/id6759945201" class="mobile-menu-link" target="_blank" rel="noopener">Download</a>
   </div>
 
   <!-- Hero -->
@@ -945,10 +1059,12 @@
       WalkingFish turns daily steps into poker chips. No real money.
       No gambling. Just strategic play fueled by physical activity.
     </p>
-    <a href="#how" class="chip-cta reveal reveal-delay-4">
-      <span class="chip-cta-icon" aria-hidden="true">&#9824;</span>
-      See How It Works
-    </a>
+    <div class="hero-cta reveal reveal-delay-4">
+      <a href="https://apps.apple.com/us/app/walking-fish/id6759945201" class="app-store-badge" target="_blank" rel="noopener">
+        <img src="/images/download-on-the-app-store.svg" alt="Download on the App Store" width="162" height="54">
+      </a>
+      <a href="#how" class="hero-cta-secondary">See How It Works <span aria-hidden="true">&#9660;</span></a>
+    </div>
     <div class="hero-scroll">
       <div class="hero-scroll-line"></div>
     </div>
@@ -1144,10 +1260,27 @@
     </div>
   </div>
 
+  <!-- Download -->
+  <section class="download" id="download">
+    <div class="download-inner">
+      <p class="section-label reveal">Available Now</p>
+      <h2 class="reveal reveal-delay-1">Start walking for your <em>buy-in</em></h2>
+      <p class="download-sub reveal reveal-delay-2">
+        WalkingFish is free on iPhone. Sync your steps, stack your chips,
+        and sit down at a table with friends.
+      </p>
+      <a href="https://apps.apple.com/us/app/walking-fish/id6759945201" class="app-store-badge reveal reveal-delay-3" target="_blank" rel="noopener">
+        <img src="/images/download-on-the-app-store.svg" alt="Download on the App Store" width="162" height="54">
+      </a>
+      <p class="download-note reveal reveal-delay-3">Requires iOS &middot; No real money, no ads, no microtransactions</p>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer>
     <span class="footer-left">&copy; 2026 WalkingFish</span>
     <div class="footer-links">
+      <a href="https://apps.apple.com/us/app/walking-fish/id6759945201" target="_blank" rel="noopener">App Store</a>
       <a href="/privacy">Privacy Policy</a>
       <a href="mailto:walkingfishapp@gmail.com">Contact</a>
     </div>
