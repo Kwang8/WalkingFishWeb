@@ -69,7 +69,9 @@
       margin-bottom: 7px;
     }
     .code {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
       font-family: ui-monospace, 'SF Mono', Menlo, monospace;
       font-size: 21px;
       letter-spacing: 0.18em;
@@ -78,8 +80,21 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 13px 22px;
-      margin-bottom: 30px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
     }
+    .code:active { background: #16221c; }
+    .code.flash { border-color: var(--green); }
+    .copy-icon { font-size: 15px; letter-spacing: 0; color: var(--text-muted); }
+    .code.flash .copy-icon { color: var(--green); }
+    .copied {
+      color: var(--green);
+      font-size: 13px;
+      margin-top: 9px;
+      min-height: 18px;
+    }
+    #code-block { margin-bottom: 30px; }
     .btn {
       display: block;
       width: 100%;
@@ -117,7 +132,11 @@
 
     <div id="code-block" hidden>
       <div class="code-label">Your invite code</div>
-      <div class="code" id="code"></div>
+      <button class="code" id="code" type="button" aria-label="Copy invite code">
+        <span id="code-text"></span>
+        <span class="copy-icon" aria-hidden="true">copy</span>
+      </button>
+      <div class="copied" id="copied"></div>
     </div>
 
     <a class="btn btn-primary" id="open-app" href="#">Open in the app</a>
@@ -133,8 +152,8 @@
   </div>
 
   <script>
-    // Path is /invite/CODE. Keep this in step with extractReferralCode()
-    // in the app (contexts/AuthContext.tsx), which matches /invite/([A-Za-z0-9]+).
+    // Path is /invite/CODE. Keep this in step with the app's own parsing
+    // (app/invite/[code].tsx and extractReferralCode in AuthContext).
     var match = location.pathname.match(/\/invite\/([A-Za-z0-9]+)/i);
     var code = match ? match[1].toUpperCase() : null;
 
@@ -142,11 +161,54 @@
     document.getElementById('open-app').setAttribute('href', deepLink);
 
     if (code) {
-      document.getElementById('code').textContent = code;
+      document.getElementById('code-text').textContent = code;
       document.getElementById('code-block').hidden = false;
-      // Remember it even if they install first and open the app cold, so a
-      // returning visitor on this device still gets credited.
-      try { localStorage.setItem('walkingfish:pendingReferral', code); } catch (e) {}
+    }
+
+    // Copy the code, so the manual path at signup is one tap rather than
+    // eight characters transcribed by hand.
+    var codeBtn = document.getElementById('code');
+    var copied = document.getElementById('copied');
+
+    function flash(message) {
+      copied.textContent = message;
+      codeBtn.classList.add('flash');
+      setTimeout(function () {
+        copied.textContent = '';
+        codeBtn.classList.remove('flash');
+      }, 2400);
+    }
+
+    // execCommand is deprecated but is still the only thing that works in
+    // older iOS Safari and on any non-secure origin, where navigator.clipboard
+    // is undefined.
+    function legacyCopy(text) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.top = '-1000px';
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, text.length); // iOS ignores select() alone
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+      flash(ok ? 'Copied — paste it at signup' : 'Press and hold to copy');
+    }
+
+    if (codeBtn) {
+      codeBtn.addEventListener('click', function () {
+        if (!code) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(
+            function () { flash('Copied — paste it at signup'); },
+            function () { legacyCopy(code); }
+          );
+        } else {
+          legacyCopy(code);
+        }
+      });
     }
 
     // On mobile, try to hand off to the app immediately. If it isn't
