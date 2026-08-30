@@ -1,4 +1,7 @@
 {
   "outputDirectory": "public",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/invite/:code", "destination": "/invite" }
+  ]
 }

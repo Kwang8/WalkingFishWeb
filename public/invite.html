@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>You're invited — WalkingFish</title>
+  <meta name="description" content="Someone invited you to WalkingFish. Walk to earn poker chips, then play Texas Hold'em with friends. You both get 5,000 chips.">
+  <meta name="apple-itunes-app" content="app-id=6759945201">
+
+  <meta property="og:title" content="You're invited to WalkingFish">
+  <meta property="og:description" content="Walk to earn poker chips, then play Texas Hold'em with friends. You both get 5,000 chips.">
+  <meta property="og:image" content="https://walkingfish.app/images/GeraldTransparent.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #060b08;
+      --bg-elevated: #121c17;
+      --border: #1c3028;
+      --text: #e4efe8;
+      --text-muted: #6a8b7a;
+      --green: #34c759;
+      --gold: #d4a84b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+    .card { max-width: 380px; width: 100%; }
+    .gerald { width: 132px; height: auto; margin: 0 auto 28px; display: block; }
+    .eyebrow {
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .reward { color: var(--gold); font-style: italic; }
+    p.sub {
+      color: var(--text-muted);
+      font-size: 16px;
+      line-height: 1.55;
+      margin-bottom: 26px;
+    }
+    .code-label {
+      color: var(--text-muted);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+    .code {
+      display: inline-block;
+      font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+      font-size: 21px;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 22px;
+      margin-bottom: 30px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      margin-bottom: 12px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--green); color: #04120a; }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .foot { color: #3d5a4a; font-size: 13px; margin-top: 18px; line-height: 1.5; }
+    .foot a { color: var(--text-muted); }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img class="gerald" src="/images/GeraldTransparent.png" alt="Gerald, the WalkingFish mascot">
+
+    <div class="eyebrow">You've been invited</div>
+    <h1>Walk to earn chips.<br>Play poker with them.</h1>
+    <p class="sub">
+      Your steps are the buy-in. Join with this invite and
+      <span class="reward">you both get 5,000 chips</span>.
+    </p>
+
+    <div id="code-block" hidden>
+      <div class="code-label">Your invite code</div>
+      <div class="code" id="code"></div>
+    </div>
+
+    <a class="btn btn-primary" id="open-app" href="#">Open in the app</a>
+    <a class="btn btn-secondary" href="https://apps.apple.com/us/app/walking-fish/id6759945201">
+      Download on the App&nbsp;Store
+    </a>
+
+    <p class="foot">
+      Already installed? Tap “Open in the app”.<br>
+      New here? Install first — your code is applied when you sign up.<br>
+      <a href="/">walkingfish.app</a>
+    </p>
+  </div>
+
+  <script>
+    // Path is /invite/CODE. Keep this in step with extractReferralCode()
+    // in the app (contexts/AuthContext.tsx), which matches /invite/([A-Za-z0-9]+).
+    var match = location.pathname.match(/\/invite\/([A-Za-z0-9]+)/i);
+    var code = match ? match[1].toUpperCase() : null;
+
+    var deepLink = code ? 'walkingfish://invite/' + code : 'walkingfish://';
+    document.getElementById('open-app').setAttribute('href', deepLink);
+
+    if (code) {
+      document.getElementById('code').textContent = code;
+      document.getElementById('code-block').hidden = false;
+      // Remember it even if they install first and open the app cold, so a
+      // returning visitor on this device still gets credited.
+      try { localStorage.setItem('walkingfish:pendingReferral', code); } catch (e) {}
+    }
+
+    // On mobile, try to hand off to the app immediately. If it isn't
+    // installed nothing happens and the buttons remain.
+    if (code && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      window.location.href = deepLink;
+    }
+  </script>
+</body>
+</html>
